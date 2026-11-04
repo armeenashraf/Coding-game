@@ -104,6 +104,166 @@ cpp:{n:"C++",e:"⚙️",lv:[
 ["Types","C++ is typed.","Declare an integer.",'___ x = 10;',["int","let","num","dim"],0,"Same as Java.","int stores whole numbers."],
 ["main","Arrange a tiny program.","Put the lines in order.",null,['#include <iostream>','int main() {','  std::cout << "Hi";','  return 0;','}'],-1,"Include first, return last.","Includes come first; return 0 ends main."]]}
 };
+
+/* ---------- HARD + BOSS LEVELS (levels 5-7) ---------- */
+const H={
+py:[["Predict the output","Negative indexes count from the end: -1 is the last item. len() counts items.","What does this print?",'nums = [1, 2, 3]\nprint(nums[-1] + len(nums))',["6","4","5","Error"],0,"nums[-1] is 3. len(nums) is 3.","3 + 3 = 6. A common trap is thinking -1 is an error."],
+["Find the bug","Python uses indentation, not braces, to show what is inside a function.","Why does this code crash?",'def add(a, b):\nreturn a + b\nprint(add(2, 3))',["The return line is not indented","print needs quotes","add needs three arguments","def should be function"],0,"Look at the start of line 2.","IndentationError: the body of a function must be indented."],
+["Boss: comprehension","A dict comprehension builds a dictionary in one line: {key: value for item in sequence}.","What does this print?",'print({k: k * k for k in range(3)})',["{0: 0, 1: 1, 2: 4}","{1: 1, 2: 4, 3: 9}","[0, 1, 4]","{0, 1, 4}"],0,"range(3) is 0, 1, 2 and the value is the square.","0→0, 1→1, 2→4 as key: value pairs inside { }."]],
+js:[["Predict the output","typeof tells you a value's type, but JavaScript has some famous quirks.","What does this print?",'console.log(typeof null);',["object","null","undefined","number"],0,"It is a well-known historical bug.","typeof null is 'object'. It has been that way since the first version of JavaScript."],
+["Floating point trap","Decimals are stored in binary, so some sums are not exact.","What does this print?",'console.log(0.1 + 0.2 === 0.3);',["false","true","undefined","TypeError"],0,"0.1 + 0.2 is 0.30000000000000004.","Binary floating point cannot store 0.1 exactly, so the sum is slightly off."],
+["Boss: filter and reduce","filter keeps matching items, reduce combines them into one value.","Arrange the code so the total is 25.",null,['const prices = [5, 10, 15];','const total = prices','  .filter(p => p > 5)','  .reduce((a, b) => a + b, 0);','console.log(total);'],-1,"Data first, filter, reduce, then print.","filter leaves [10, 15]; reduce adds them to 25."]],
+re:[["Find the bug","Never change state directly. Always call the setter so React knows to redraw.","What is wrong here?",'function C() {\n  const [n, setN] = useState(0);\n  return <button onClick={() => { n = n + 1 }}>{n}</button>;\n}',["State must be changed with setN, not assigned","useState needs two arguments","The button needs a key","JSX cannot show numbers"],0,"Which function changes state?","n is a constant and assigning to it also would not trigger a redraw. Use setN(n + 1)."],
+["useEffect","useEffect runs code after rendering. The array at the end lists what it depends on.","Run the effect only when n changes.",'useEffect(() => {\n  document.title = n;\n}, [___]);',["n","title","effect","null"],0,"List the value the effect uses.","The dependency array [n] makes React re-run the effect only when n changes."],
+["Boss: lists and keys","When you render a list, each item needs a stable, unique key.","Arrange a List component that renders items with keys.",null,['function List({ items }) {','  return (','    <ul>','      {items.map(i => <li key={i.id}>{i.name}</li>)}','    </ul>','  );','}'],-1,"Function opens, return, ul, map, then close everything.","key helps React track which item changed, so it updates only what is needed."]],
+html:[["Semantic HTML","Semantic tags tell browsers and screen readers what a block means.","Pick the tag meant for main navigation links.",'<___>\n  <a href="/">Home</a>\n</___>',["nav","div","section","span"],0,"It is short for navigation.","<nav> marks a navigation area, which helps accessibility."],
+["Accessibility","Alt text lets people who cannot see an image understand it.","What is missing here?",'<img src="logo.png">',["An alt attribute","A title tag","A class name","A width"],0,"Screen readers read this aloud.","Images need alt text describing them, or alt=\"\" if purely decorative."],
+["Boss: a form","Labels linked to inputs with for/id make forms usable and accessible.","Arrange a complete form.",null,['<form action="/save" method="post">','  <label for="n">Name</label>','  <input id="n" name="n">','  <button type="submit">Send</button>','</form>'],-1,"Form wraps everything; label comes before its input.","label for=\"n\" connects to input id=\"n\"."]],
+css:[["Specificity","When rules clash, the more specific selector wins. An id beats a class.","Which colour is the text?",'#box { color: blue; }\n.box { color: red; }\n/* <div id="box" class="box"> */',["blue","red","black","purple"],0,"Compare id and class.","ids outrank classes in specificity, so blue wins even though red comes later."],
+["Shorthand","margin with two values sets vertical then horizontal.","What does this mean?",'margin: 10px 20px;',["10px top and bottom, 20px left and right","10px left and right, 20px top and bottom","10px on all sides","10px top, 20px bottom"],0,"First value is up/down.","Two values: vertical first, then horizontal."],
+["Boss: Grid","Grid makes rows and columns. fr means a fraction of the free space.","Make 3 equal-width columns.",'.grid {\n  display: grid;\n  grid-template-columns: repeat(3, ___);\n}',["1fr","100%","3px","flex"],0,"A fraction unit.","repeat(3, 1fr) creates three columns that share the width equally."]],
+sql:[["Aggregate","COUNT(*) counts rows. Combined with WHERE it counts only matching rows.","What does this return?",'SELECT COUNT(*) FROM users WHERE age > 18;',["The number of users older than 18","Every user older than 18 as rows","The age of the oldest user","The sum of all ages"],0,"One number comes back.","COUNT(*) returns a single number: how many rows matched."],
+["JOIN","A JOIN combines rows from two tables where a condition matches.","Combine users and their orders.",'SELECT u.name, o.total\nFROM users u\n___ orders o ON u.id = o.user_id;',["JOIN","MERGE","UNION","LINK"],0,"The standard keyword for combining tables.","JOIN (INNER JOIN) matches rows by the ON condition. UNION stacks results instead."],
+["Boss: GROUP BY","GROUP BY makes one row per group; HAVING filters those groups.","Arrange the query: cities with more than 5 users.",null,['SELECT city, COUNT(*)','FROM users','GROUP BY city','HAVING COUNT(*) > 5','ORDER BY city;'],-1,"Group before you filter groups.","HAVING filters after grouping; WHERE filters before it."]],
+java:[["Integer division","With two ints, Java drops the decimal part.","What does this print?",'System.out.println(7 / 2);',["3","3.5","4","Error"],0,"Both numbers are int.","int / int gives an int, so 3.5 becomes 3."],
+["String comparison","== compares references for objects; .equals compares the text.","What does this print?",'String a = "hi";\nString b = new String("hi");\nSystem.out.println(a == b);',["false","true","hi","Compile error"],0,"Is b the same object as a?","new String creates a separate object, so == is false. Use a.equals(b)."],
+["Boss: a class","Classes bundle data (fields) and behaviour (methods). private hides data.","Arrange the Dog class.",null,['public class Dog {','  private String name;','  public Dog(String name) { this.name = name; }','  public String getName() { return name; }','}'],-1,"Fields, constructor, then methods.","The constructor sets the private field; the getter lets others read it."]],
+cpp:[["Pointers","A pointer stores a memory address. * reads the value at that address.","What does this print?",'int x = 5;\nint* p = &x;\nstd::cout << *p;',["5","The address of x","&x","0"],0,"* means 'the value at'.","*p dereferences the pointer and gives x's value, 5."],
+["Out of bounds","Arrays start at index 0, so size 3 means indexes 0 to 2.","What is wrong here?",'int a[3] = {1, 2, 3};\nstd::cout << a[3];',["Index 3 is out of bounds","Arrays must hold 4 items","cout needs endl","int is not allowed"],0,"Count from 0.","a[3] reads past the end: undefined behaviour. Valid indexes are 0, 1, 2."],
+["Boss: a loop program","Loops repeat; the condition i <= 3 includes 3.","Arrange a program that prints 123.",null,['#include <iostream>','int main() {','  for (int i = 1; i <= 3; i++) std::cout << i;','  return 0;','}'],-1,"Include, main, loop, return.","The loop runs for i = 1, 2, 3 and prints 123."]]
+};
+for(const k in H)L[k].lv.push(...H[k]);
+const tier=i=>i<4?["Easy",20]:i<6?["Hard",30]:["Boss",50];
+/* ---------- 40-QUESTION TRACKS (Basic 1-14, Medium 15-28, Hard 29-40). First option is always the correct one; options are shuffled when played. ---------- */
+const M=(q,a,b,c,d,w)=>({t:"m",q,o:[a,b,c,d],w}),T=(q,v,w)=>({t:"t",q,v,w});
+const ntier=i=>i<14?["Basic",10]:i<28?["Medium",15]:["Hard",25];
+L.py.lv=[
+M("Which function shows text on the screen?","print()","input()","show()","echo()","print() is Python's built-in output function."),
+T("Python is case-sensitive: name and Name are different variables.",true,"Python treats upper and lower case as different."),
+M("Which symbol starts a comment in Python?","#","//","/*","--","A # makes Python ignore the rest of the line."),
+M("What type is the value 3.14?","float","int","str","decimal","Numbers with a decimal point are floats."),
+T("A string can be written with single quotes or double quotes.",true,"'hi' and \"hi\" are the same kind of string."),
+M("What does len('hello') return?","5","4","6","'hello'","len() counts the items or characters: 5."),
+M("Which keyword starts a condition?","if","when","check","cond","if runs code only when a condition is true."),
+T("Python uses curly braces { } to mark blocks of code.",false,"Python uses indentation, not braces, for blocks."),
+M("What does the string method .upper() do?","Returns a copy in capital letters","Deletes the string","Counts the letters","Converts it to a number","Strings are not changed in place; a new capitalised string is returned."),
+M("What does input() always return?","A string","An int","A float","Nothing","Even if the user types 5, you get '5' and must convert it with int()."),
+T("In Python, 5 == 5.0 is True.",true,"== compares values, and 5 equals 5.0."),
+M("Which of these is a list?","[1, 2, 3]","(1, 2, 3)","{1, 2, 3}","<1, 2, 3>","Square brackets make a list; parentheses make a tuple; braces make a set."),
+M("What does my_list.append(4) do?","Adds 4 to the end of the list","Adds 4 to the start","Removes 4","Sorts the list","append adds one item at the end."),
+M("What does range(1, 4) produce?","1, 2, 3","1, 2, 3, 4","0, 1, 2, 3","2, 3, 4","The start is included and the stop is not."),
+M("What does 'a,b,c'.split(',') return?","['a', 'b', 'c']","'abc'","['a,b,c']","3","split cuts a string into a list at each separator."),
+T("Tuples can be changed after they are created.",false,"Tuples are immutable; lists are mutable."),
+M("What does .strip() do to a string?","Removes spaces at both ends","Removes every space","Removes the first character","Splits it into words","strip() trims whitespace from the start and end only."),
+M("What does 7 // 2 give?","3","3.5","4","1","// is floor division and drops the decimal."),
+M("What does 7 % 2 give?","1","3","0","3.5","% is the remainder after division."),
+T("A dictionary stores key-value pairs.",true,"Example: {'name': 'Sam'}."),
+M("Which call reads a dict value without an error if the key is missing?","d.get('k')","d['k']","d.find('k')","d.key('k')","get returns None (or a default) when the key is missing; d['k'] raises KeyError."),
+M("What does return do inside a function?","Sends a value back and ends the function","Prints a value","Repeats the function","Deletes the function","Code after return in the same call never runs."),
+T("A function with no return statement returns None.",true,"None is Python's 'nothing' value."),
+M("What does break do in a loop?","Exits the loop immediately","Skips one round","Pauses the loop","Restarts the loop","break stops the whole loop."),
+M("What does continue do in a loop?","Skips to the next round","Exits the loop","Ends the program","Repeats the same round","continue jumps to the next iteration."),
+M("x = [1, 2, 3]. What does x.pop() return?","3","1","[1, 2]","None","pop() removes and returns the last item."),
+T("A set keeps duplicate values.",false,"Sets store each value only once."),
+M("What does 'a' in 'cat' check?","Whether 'a' appears inside 'cat'","The position of 'a'","The type of 'a'","The length of 'cat'","in tests membership and returns True or False."),
+M("What does print(list(range(0, 10, 3))) show?","[0, 3, 6, 9]","[0, 3, 6]","[3, 6, 9]","[0, 10, 3]","The third number is the step: 0, 3, 6, 9."),
+M("What does print('abc'[::-1]) show?","cba","abc","bca","Error","A step of -1 reverses the string."),
+T("A list is mutable, but a string is not.",true,"You can change list items in place; strings need a new copy."),
+M("What is [x * 2 for x in range(3)]?","[0, 2, 4]","[2, 4, 6]","[0, 1, 2]","[0, 2, 4, 6]","A list comprehension builds a list in one line: 0*2, 1*2, 2*2."),
+M("What does *args do in def f(*args)?","Collects extra positional arguments into a tuple","Multiplies the arguments","Makes a dictionary","Makes arguments optional keywords","*args gathers any number of positional arguments."),
+T("A default argument value is created fresh every time the function is called.",false,"It is created once when the function is defined, which is why mutable defaults like [] are dangerous."),
+M("a = [1, 2]; b = a; b.append(3); print(a) shows?","[1, 2, 3]","[1, 2]","[3]","Error","a and b point to the same list, so changing one changes both."),
+M("What does the 'is' operator compare?","Whether two names point to the same object","Whether values are equal","Only the types","Only the lengths","Use == for equal values and is for identity."),
+M("What does try/except do?","Catches errors so the program does not crash","Repeats code","Imports modules","Defines classes","Code in except runs when an error happens in try."),
+T("A lambda is a small anonymous function made from one expression.",true,"Example: lambda x: x + 1."),
+M("What does self refer to inside a class method?","The instance the method is called on","The class itself","The module","A global variable","self is the object, so self.name is that object's name."),
+M("What does yield do inside a function?","Produces a value and pauses the function","Ends the function","Prints a value","Returns the whole list at once","yield makes a generator that hands out values one at a time.")
+];
+L.js.lv=[
+M("Which keyword declares a variable you can reassign?","let","const","fixed","int","let allows reassignment; const does not."),
+T("A const variable can be reassigned.",false,"Reassigning a const throws a TypeError."),
+M("Which call prints to the console?","console.log()","print()","echo()","log.console()","console.log writes to the browser or Node console."),
+M("What does typeof 'hi' return?","'string'","'text'","'char'","'str'","JavaScript has no separate char type."),
+T("JavaScript and Java are the same language.",false,"They are different languages with different designs."),
+M("What does === check?","Value and type are equal","Value only","Memory address only","Assignment","=== is strict equality with no type conversion."),
+M("Which starts a single-line comment?","//","#","--","<!--","// ignores the rest of the line."),
+T("Arrays start at index 0.",true,"The first item is arr[0]."),
+M("What does arr.push(x) do?","Adds x to the end","Adds x to the start","Removes the last item","Sorts the array","push appends and returns the new length."),
+M("What does '5' + 3 give?","'53'","8","NaN","Error","+ joins when one side is a string."),
+M("What does 'hello'.length give?","5","4","6","undefined","length is a property, not a function."),
+T("&& means logical AND.",true,"Both sides must be truthy."),
+M("Which loop runs while a condition stays true?","while","until","repeat","loop","while (condition) { ... }"),
+M("Which is a valid function declaration?","function add(a, b) { return a + b; }","def add(a, b):","func add(a, b) {}","fn add(a, b) {}","JavaScript uses the function keyword."),
+M("What does .map() do?","Builds a new array by transforming every item","Changes the original array","Keeps only some items","Adds all items together","map returns a same-length array."),
+M("What does .filter() do?","Keeps only items that pass a test","Transforms each item","Removes the first item","Sorts items","filter returns a possibly shorter array."),
+T("== converts types before comparing, but === does not.",true,"So '5' == 5 is true but '5' === 5 is false."),
+M("What does typeof [] return?","'object'","'array'","'list'","'undefined'","Use Array.isArray() to test for arrays."),
+M("What does .includes(x) return?","true or false","The index of x","x itself","A new array","includes checks whether the value exists."),
+T("NaN === NaN is true.",false,"NaN is not equal to anything, even itself. Use Number.isNaN()."),
+M("What does JSON.parse do?","Turns a JSON string into an object","Turns an object into a string","Parses HTML","Reads a file","JSON.stringify does the opposite."),
+M("What does (x => x * 2)(4) return?","8","4","x * 2","undefined","The arrow function doubles its input."),
+M("What does [1, 2, 3].join('-') return?","'1-2-3'","[1-2-3]","6","Error","join builds one string using the separator."),
+T("let has block scope.",true,"A let variable lives only inside its { } block."),
+M("Which value is falsy?","0","'0'","[]","'false'","Falsy values: 0, '', null, undefined, NaN, false."),
+M("What does a ?? b do?","Uses b only if a is null or undefined","Uses b if a is falsy","Compares a and b","Calls a as a function","?? differs from || because 0 and '' are kept."),
+M("What does [10, 20, 30, 40].slice(1, 3) return?","[20, 30]","[10, 20, 30]","[20, 30, 40]","[10, 20]","slice includes the start index and excludes the end."),
+T("Two objects with the same content are === equal.",false,"Objects are compared by reference, not content."),
+M("What does console.log(typeof undefined) print?","undefined","object","null","string","typeof undefined is the string 'undefined'."),
+M("What does console.log([] + []) print?","An empty string","[]","0","NaN","Both arrays turn into '' and are joined."),
+T("var is function-scoped and its declaration is hoisted.",true,"That is why let and const are preferred."),
+M("What is a closure?","A function that remembers variables from its outer scope","A closed file","A private class","The end of a loop","Closures keep access to the scope where they were created."),
+M("Inside obj.method(), what does this normally refer to?","obj","window always","the method","undefined","this depends on how a function is called."),
+T("The await keyword can pause a function until a promise settles.",true,"It is used inside async functions (and top-level modules)."),
+M("What does an async function always return?","A promise","The raw value","undefined","An array","Returned values are wrapped in a promise."),
+M("What does console.log(1 + '2' - 1) print?","11","2","'121'","NaN","1 + '2' is '12', then '12' - 1 is 11."),
+M("What does Object.keys(obj) return?","An array of the object's own keys","An array of values","The number of keys","The first key","Object.values and Object.entries are related."),
+T("setTimeout(fn, 0) runs fn immediately and blocks the next line.",false,"The callback waits until the current code finishes."),
+M("What does [...arr, 4] do?","Copies the items of arr into a new array and adds 4","Deletes arr","Collects rest arguments","Compares arr with 4","The spread operator expands items."),
+M("When do Promise .then callbacks run?","After the current code, before timers","Before the current code","Never","Only in Node","They run as microtasks, ahead of setTimeout callbacks.")
+];
+L.re.lv=[
+M("What is React?","A JavaScript library for building user interfaces","A database","A CSS framework","A programming language","React builds UIs from components."),
+T("A component is a reusable piece of UI.",true,"Components can be nested and reused."),
+M("What is JSX?","HTML-like syntax written inside JavaScript","A database","A style sheet","A server","Build tools compile JSX into JavaScript."),
+T("React component names must start with a lowercase letter.",false,"Components start with a capital letter, like Button."),
+M("Which JSX attribute sets the CSS class?","className","class","cssClass","styleClass","class is a reserved word in JavaScript."),
+M("How do you show a variable called name in JSX?","{name}","[name]","((name))","<name>","Curly braces run JavaScript inside JSX."),
+T("A component must return one parent element (or a fragment).",true,"Wrap siblings in a <div> or <></>."),
+M("What are props?","Inputs passed from a parent to a child component","A kind of state","CSS rules","Browser events","Props make components configurable."),
+T("A child component should change its own props directly.",false,"Props are read-only; the parent owns them."),
+M("Which hook adds state to a function component?","useState","useProp","useData","useVar","useState returns [value, setter]."),
+M("What does setCount(5) do?","Updates the state and re-renders","Only reads the state","Deletes the state","Imports a file","Calling a setter schedules a re-render."),
+M("What does onClick expect?","A function","A string of code","A number","A class name","Pass a function like onClick={handle}."),
+M("What is <></> in JSX?","A fragment, which groups elements without extra HTML","A comment","An error","A closing tag","Fragments avoid unnecessary wrapper divs."),
+M("What does createRoot(el).render(<App />) do?","Mounts your app into the page","Starts a server","Writes CSS","Runs tests","It is the entry point that attaches React to the DOM."),
+M("Why do list items need a key?","It helps React tell items apart when the list changes","It styles the item","It sorts the list","It is required by HTML","Keys let React update only the items that changed."),
+T("Hooks like useState can only be called inside components or custom hooks.",true,"Calling them elsewhere breaks the rules of hooks."),
+M("What does useEffect do?","Runs side effects after rendering","Creates state","Styles components","Defines routes","Use it for fetching data, timers and subscriptions."),
+M("When does useEffect(fn, []) run?","Once after the first render","After every render","Never","Whenever state changes","An empty dependency array means no dependencies."),
+T("State updates are applied immediately, so the new value is available on the next line.",false,"Updates are batched; the new value shows on the next render."),
+M("How do you render something only when isOn is true?","{isOn && <p>On</p>}","<if isOn><p>On</p></if>","v-if='isOn'","if (isOn) in the JSX","JSX allows JavaScript expressions like && and ternaries."),
+M("What makes an input 'controlled'?","Its value comes from state and onChange updates it","It uses a ref only","It has an id","It has a name","State is the single source of truth."),
+M("What does 'lifting state up' mean?","Moving state to a shared parent component","Deleting state","Copying state to a child","Making state global","Siblings can then share the same data."),
+T("Pushing directly into an array that is stored in state is the recommended way to update it.",false,"Always create a new array so React sees the change."),
+M("What is the correct way to add x to an array in state?","setItems([...items, x])","items.push(x)","items = x","setItems.push(x)","Spread into a new array, then set it."),
+M("What does the children prop contain?","The content placed between a component's tags","The component's state","A list of methods","The parent's props","<Card>Hi</Card> gives Card the children 'Hi'."),
+M("What is useRef commonly used for?","Reaching a DOM element or keeping a value without re-rendering","Storing state that re-renders","Running effects","Routing","Changing ref.current does not re-render."),
+T("React re-renders a component when its state changes.",true,"That is how the UI stays in sync with data."),
+M("How do you stop a form from reloading the page?","e.preventDefault()","e.stop()","return false only","e.cancel()","Call it in the onSubmit handler."),
+M("What is the virtual DOM?","A lightweight copy React compares to update the real DOM efficiently","The browser's DOM","A server cache","A CSS engine","React diffs old and new trees and updates only the differences."),
+T("It is fine to call a hook inside an if statement.",false,"Hooks must run in the same order every render."),
+M("What does useMemo do?","Caches a calculated value between renders","Creates state","Runs an effect","Fetches data","It recalculates only when its dependencies change."),
+M("What does useCallback do?","Caches a function between renders","Calls a function twice","Creates state","Fetches data","It keeps the same function identity until dependencies change."),
+T("A useEffect cleanup function runs before the effect re-runs and when the component unmounts.",true,"Use it to remove listeners or clear timers."),
+M("Calling setN(n + 1) three times in one handler increases n by how much?","1","3","0","It throws an error","Each call uses the same stale n from that render."),
+M("When is setN(prev => prev + 1) the better choice?","When the new state depends on the previous state","Never","Only for objects","Only for strings","The functional form always gets the latest value."),
+M("What does React.memo do?","Skips re-rendering when props did not change","Memorises strings","Creates state","Handles routing","It wraps a component to avoid useless renders."),
+T("Context helps avoid passing props through many levels (prop drilling).",true,"A provider shares data with all descendants."),
+M("When is useReducer a good fit?","Complex state with many kinds of updates","Storing one string","Styling","Routing","A reducer centralises update logic."),
+M("Why avoid array indexes as keys in reorderable lists?","React can mix up items when the order changes","It is slower to type","It is a syntax error","HTML forbids numbers","Stable ids keep each item's identity."),
+M("What is a custom hook?","A function starting with 'use' that reuses hook logic","A class component","A plugin","A CSS file","Example: useFetch, useLocalStorage.")
+];
+L.py.big=L.js.big=L.re.big=true;
 const XP=20,HINT=5,HEARTS=3;
 
 /* ---------- STATE ---------- */
@@ -145,28 +305,37 @@ ${mode==="up"?'<label>Your name<input id="nm" autocomplete="name"></label>':""}
 <p class="note">Works offline. Your account and progress are saved in this browser on this device.</p></div>`;return}
 if(view==="home"){A.innerHTML=`${hdr()}<div class="card hero"><h1>Hi ${esc(P.name||user.name)}, ready to level up?</h1><p>Each game is a short quest. You learn one idea, solve a puzzle, earn XP and light up a star. Finish every star to complete the language.</p><button class="pri" onclick="go('games')">Open Games</button></div>
 <div class="menu"><button onclick="go('games')"><b>🎮 Games</b><small>${Object.keys(L).length} languages to play</small></button><button onclick="go('doubt')"><b>💡 Doubt Clearer</b><small>Search any concept and see an explained example</small></button><button onclick="go('done')"><b>🏆 Completed Sessions</b><small>${Object.keys(P.done).length} finished</small></button><button onclick="help()"><b>❓ How it works</b><small>XP, hearts, hints and refresh</small></button></div>`;return}
-if(view==="games"){A.innerHTML=`${hdr()}<h2>Choose a game</h2><p class="sec">Pick a language. You'll get a full briefing before you start.</p><div class="grid">${Object.entries(L).map(([k,l])=>`<button class="card lang" onclick="brief('${k}')">${P.done[k]?'<span class="done-tag">✔ complete</span>':""}<span class="em">${l.e}</span><b>${l.n}</b><span class="note">${l.lv.length} levels</span><div class="stars">${l.lv.map((_,i)=>`<span class="${P.done[k]||(P.best[k]||0)>i?"on":""}">★</span>`).join("")}</div></button>`).join("")}</div>`;return}
+if(view==="games"){A.innerHTML=`${hdr()}<h2>Choose a game</h2><p class="sec">Pick a language. You'll get a full briefing before you start.</p><div class="grid">${Object.entries(L).map(([k,l])=>`<button class="card lang" onclick="brief('${k}')">${P.done[k]?'<span class="done-tag">✔ complete</span>':""}<span class="em">${l.e}</span><b>${l.n}</b><span class="note">${l.lv.length} ${l.big?"questions · Basic to Hard":"levels · Easy, Hard, Boss"}</span><div class="stars">${(l.big?Array.from({length:10}):l.lv).map((_,i)=>`<span class="${P.done[k]||(P.best[k]||0)>(l.big?i*4:i)?"on":""}">★</span>`).join("")}</div></button>`).join("")}</div>`;return}
 if(view==="brief"){const l=L[G.k];A.innerHTML=`${hdr()}<div class="card"><h2>${l.e} ${l.n} quest</h2>
 <p class="sec">Before you start</p><p>This is a learning game, not just a quiz. Each level teaches one real ${l.n} idea in a short note, then asks you to use it. Every answer comes with an explanation, so even mistakes teach you something.</p>
-<p class="sec">How to play</p><ul><li>Read the <b>Learn</b> note, then look at the code.</li><li>Pick the option that fills the <span class="blank">&nbsp;&nbsp;</span> gap — or tap lines to put them in the right order and press <b>Check</b>.</li><li>You have ${HEARTS} ❤️ hearts. A wrong answer costs one; at zero you restart the quest.</li></ul>
+<p class="sec">How to play</p><ul>${l.big?'<li>40 questions climb from <b>Basic</b> to <b>Medium</b> to <b>Hard</b>.</li><li>You will meet <b>multiple choice</b>, <b>true or false</b> and <b>explain the method</b> questions. Each correct answer comes with an explanation.</li><li>You have 5 ❤️. A wrong answer costs one; at zero you restart from your last checkpoint (every 10 questions).</li>':`<li>Read the <b>Learn</b> note, then look at the code.</li><li>Pick the option that fills the <span class="blank">&nbsp;&nbsp;</span> gap — or tap lines to put them in the right order and press <b>Check</b>.</li><li>You have ${HEARTS} ❤️ hearts. A wrong answer costs one; at zero you restart the quest.</li>`}</ul>
 <p class="sec">Tools you can use</p><ul><li>💡 <b>Hint</b> — a nudge, costs ${HINT} XP.</li><li>🔄 <b>Refresh</b> — resets this level and reshuffles it, free.</li><li>🙋 <b>Doubt</b> — opens the full concept explanation anytime.</li></ul>
-<p class="sec">What you gain</p><ul><li>+${XP} XP for each correct answer (+${XP/2} if you used a hint)</li><li>A lit star per level, and a spot in Completed Sessions with a celebration.</li></ul>
+<p class="sec">What you gain</p><ul>${l.big?'<li>XP per correct answer: 10 on Basic, 15 on Medium, 25 on Hard (half if you use a hint or Doubt)</li>':'<li>XP for each correct answer: 20 on Easy levels, 30 on Hard, 50 on the Boss level (half if you use a hint)</li><li>Harder levels ask you to predict output, find bugs and build code in order</li>'}<li>A lit star per level, and a spot in Completed Sessions with a celebration.</li></ul>
 <div class="row" style="margin-top:18px"><button class="ghost" onclick="go('games')">Back</button><button class="pri" onclick="start('${G.k}')">Start the quest</button></div></div>`;return}
 if(view==="play"){play();return}
 if(view==="doubt"){A.innerHTML=`${hdr()}<h2>Doubt Clearer</h2><p class="sec">Type a word (like loop, state, WHERE) or pick a language.</p><input class="srch" id="q" placeholder="Search a concept…" oninput="dq()"><div id="dr"></div>`;dq();return}
-if(view==="done"){const d=Object.entries(P.done);A.innerHTML=`${hdr()}<h2>Completed Sessions</h2>${d.length?`<div class="grid" style="margin-top:12px">${d.map(([k,v])=>`<div class="card"><span style="font-size:30px">${L[k].e}</span><h3>${L[k].n}</h3><p class="note">Finished ${new Date(v.date).toLocaleDateString()}<br>${v.xp} XP earned · ${"❤️".repeat(v.hearts)||"💔"} left</p><div class="stars"><span class="on">★★★★</span></div></div>`).join("")}</div>`:`<div class="card"><p>Nothing here yet. Finish all levels of a game and it will appear here.</p><button class="pri" style="margin-top:12px" onclick="go('games')">Pick a game</button></div>`}`}
+if(view==="done"){const d=Object.entries(P.done);A.innerHTML=`${hdr()}<h2>Completed Sessions</h2>${d.length?`<div class="grid" style="margin-top:12px">${d.map(([k,v])=>`<div class="card"><span style="font-size:30px">${L[k].e}</span><h3>${L[k].n}</h3><p class="note">Finished ${new Date(v.date).toLocaleDateString()}<br>${v.xp} XP earned · ${"❤️".repeat(v.hearts)||"💔"} left</p><div class="stars"><span class="on">${"★".repeat(Math.min(10,L[k].lv.length))}</span></div></div>`).join("")}</div>`:`<div class="card"><p>Nothing here yet. Finish all levels of a game and it will appear here.</p><button class="pri" style="margin-top:12px" onclick="go('games')">Pick a game</button></div>`}`}
 }
 window.dq=()=>{const q=($("#q")?.value||"").toLowerCase();const r=[];
-for(const[k,l]of Object.entries(L))for(const v of l.lv){if(!q||(l.n+v[0]+v[1]+v[3]).toLowerCase().includes(q))r.push([l,v])}
-$("#dr").innerHTML=r.length?r.map(([l,v])=>`<div class="card" style="margin-bottom:12px"><b>${l.e} ${l.n} · ${esc(v[0])}</b><div class="learn">${esc(v[1])}</div>${v[3]?`<pre>${esc(v[3].replace("___",v[4][v[5]]))}</pre>`:`<pre>${esc(v[4].join("\n"))}</pre>`}<p class="note">${esc(v[7])}</p></div>`).join(""):`<div class="card">No match. Try a shorter word like "list" or "loop".</div>`};
+for(const[k,l]of Object.entries(L))for(const v of l.lv){const tx=Array.isArray(v)?l.n+v[0]+v[1]+v[3]:l.n+v.q+v.w;if(!q||tx.toLowerCase().includes(q))r.push([l,v])}
+$("#dr").innerHTML=r.length?r.slice(0,30).map(([l,v])=>Array.isArray(v)?`<div class="card" style="margin-bottom:12px"><b>${l.e} ${l.n} · ${esc(v[0])}</b><div class="learn">${esc(v[1])}</div>${v[3]?`<pre>${esc(v[3].replace("___",v[4][v[5]]))}</pre>`:`<pre>${esc(v[4].join("\n"))}</pre>`}<p class="note">${esc(v[7])}</p></div>`:`<div class="card" style="margin-bottom:12px"><b>${l.e} ${l.n}</b><p style="margin:6px 0">${esc(v.q)}</p><div class="learn"><b>Answer:</b> ${esc(v.t==="t"?(v.v?"True":"False"):v.o[0])}<br>${esc(v.w)}</div></div>`).join("")+(r.length>30?`<p class="note">Showing 30 of ${r.length}. Type more letters to narrow it down.</p>`:""):`<div class="card">No match. Try a shorter word like "list" or "loop".</div>`};
 window.help=()=>{const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card"><h2>How StarCode works</h2><ol><li><b>Games</b> → choose a language → read the briefing.</li><li>Each level: learn a note, then solve the puzzle.</li><li><b>Hint</b> costs ${HINT} XP. <b>Refresh</b> reshuffles the level. <b>Doubt</b> shows the full explanation.</li><li>Wrong answers cost a ❤️. Zero hearts restarts the quest.</li><li>Finish every level to celebrate and unlock the language in <b>Completed Sessions</b>.</li></ol><button class="pri" style="margin-top:14px" onclick="this.closest('.modal').remove()">Got it</button></div>`;document.body.append(m)};
 
 /* ---------- GAME ---------- */
 window.brief=k=>{G={k};view="brief";render()};
-window.start=k=>{G={k,i:0,h:HEARTS,xp:0};view="play";lvl();render()};
-function lvl(){const v=L[G.k].lv[G.i];G.o=v[3]?shuf(v[4].map((t,j)=>[t,j])):shuf(v[4].map((t,j)=>[t,j]));G.pick=[];G.fb=null;G.hint=false;G.hu=false;G.lock=false}
-function play(){const l=L[G.k],v=l.lv[G.i],ord=!v[3];
-$("#app").innerHTML=`${hdr()}<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3>${l.e} ${l.n} · Level ${G.i+1}/${l.lv.length}: ${esc(v[0])}</h3><span class="chip">${"❤️".repeat(G.h)||"💔"}</span></div>
+window.start=k=>{G={k,i:0,h:L[k].big?5:HEARTS,xp:0};view="play";lvl();render()};
+function lvl(){const v=L[G.k].lv[G.i];if(!Array.isArray(v)){G.o=v.t==="t"?[["True",0],["False",1]]:shuf(v.o.map((t,j)=>[t,j]))}else G.o=shuf(v[4].map((t,j)=>[t,j]));G.rm=[];G.pick=[];G.fb=null;G.hint=false;G.hu=false;G.lock=false;G.w=null}
+function playN(l,v){const c=v.t==="t"?(v.v?0:1):0,tr=ntier(G.i),n=l.lv.length;
+$("#app").innerHTML=`${hdr()}<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3>${l.e} ${l.n} · Question ${G.i+1}/${n}</h3><span class="chip">${tr[0]} · ${v.t==="t"?"True or false":"Multiple choice"}</span><span class="chip">${"❤️".repeat(G.h)||"💔"}</span></div><div class="bar"><i style="width:${G.i/n*100}%"></i></div>
+<p style="font-size:18px;margin:12px 0">${esc(v.q)}</p>
+<div class="opts" style="grid-template-columns:${v.t==="t"?"1fr 1fr":"repeat(auto-fit,minmax(220px,1fr))"}">${G.o.filter(([t,j])=>!G.rm.includes(j)).map(([t,j])=>`<button style="font-family:inherit" class="${G.fb&&G.fb.ok&&j===c?"right":G.w===j?"wrong":""}" ${G.lock?"disabled":""} onclick="an(${j})">${esc(t)}</button>`).join("")}</div>
+${G.hint?`<div class="hint">💡 ${v.t==="t"?"Ask yourself: is there any exception that makes this statement false?":"Two wrong answers were removed."}</div>`:""}
+${G.fb?`<div class="fb ${G.fb.ok?"ok":"no"}"><b>${G.fb.ok?"Correct! +"+G.fb.xp+" XP":"Not quite. Try again."}</b>${G.fb.ok?"<br>"+esc(v.w):""}</div>`:""}
+<div class="row" style="justify-content:flex-start;margin-top:10px"><button onclick="hint()" ${G.lock?"disabled":""}>💡 Hint (−${HINT} XP)</button><button onclick="ref()">🔄 Refresh</button><button onclick="doubt()">🙋 Doubt</button>${G.lock&&G.fb?.ok?`<button class="pri" onclick="nxt()">${G.i+1===n?"Finish quest 🎉":"Next question →"}</button>`:""}</div><p class="note">Quest XP: ${G.xp} · checkpoint every 10 questions</p></div>`}
+window.an=j=>{const v=L[G.k].lv[G.i],c=v.t==="t"?(v.v?0:1):0;j===c?good():bad(j)};
+window.cp=()=>{G.i=Math.floor(G.i/10)*10;G.h=5;lvl();view="play";render()};
+function play(){const l=L[G.k],v=l.lv[G.i];if(!Array.isArray(v))return playN(l,v);const ord=!v[3];
+$("#app").innerHTML=`${hdr()}<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3>${l.e} ${l.n} · ${tier(G.i)[0]} · Level ${G.i+1}/${l.lv.length}: ${esc(v[0])}</h3><span class="chip">${"❤️".repeat(G.h)||"💔"}</span></div>
 <div class="bar"><i style="width:${G.i/l.lv.length*100}%"></i></div>
 <div class="learn"><b>Learn:</b> ${esc(v[1])}</div><p><b>Task:</b> ${esc(v[2])}</p>
 ${ord?`<div class="ans">${G.pick.map(j=>`<button class="tl" onclick="unp(${j})" style="font-family:Consolas,'Courier New',monospace;font-size:13px;white-space:pre;margin:2px">${esc(v[4][j])}</button>`).join("")||'<span class="note">Tap lines below in order…</span>'}</div><div class="tiles">${G.o.filter(([t,j])=>!G.pick.includes(j)).map(([t,j])=>`<button onclick="pk(${j})">${esc(t)}</button>`).join("")}</div>`
@@ -178,13 +347,13 @@ ${G.lock&&G.fb?.ok?`<button class="pri" onclick="nxt()">${G.i+1===l.lv.length?"F
 <p class="note">Quest XP: ${G.xp}</p></div>`}
 window.pk=j=>{G.pick.push(j);G.fb=null;render()};window.unp=j=>{G.pick=G.pick.filter(x=>x!==j);render()};
 window.ref=()=>{G.h=G.h;lvl();render()};
-window.hint=()=>{if(!G.hint){G.hint=true;G.hu=true;G.xp=Math.max(0,G.xp-HINT)}render()};
-window.doubt=()=>{const v=L[G.k].lv[G.i],m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card"><h3>💡 ${esc(v[0])}</h3><div class="learn">${esc(v[1])}</div>${v[3]?`<pre>${esc(v[3].replace("___",v[4][v[5]]))}</pre>`:`<pre>${esc(v[4].join("\n"))}</pre>`}<p class="note">Full answer: ${esc(v[7])}</p><button class="pri" style="margin-top:12px" onclick="this.closest('.modal').remove()">Back to the game</button></div>`;document.body.append(m)};
+window.hint=()=>{if(!G.hint){G.hint=true;G.hu=true;G.xp=Math.max(0,G.xp-HINT);const v=L[G.k].lv[G.i];if(!Array.isArray(v)&&v.t==="m")G.rm=shuf([1,2,3]).slice(0,2)}render()};
+window.doubt=()=>{const v=L[G.k].lv[G.i],m=document.createElement("div");m.className="modal";if(!Array.isArray(v)){G.hu=true;m.innerHTML=`<div class="card"><h3>🙋 Doubt cleared</h3><p style="margin:8px 0">${esc(v.q)}</p><div class="learn"><b>Answer:</b> ${esc(v.t==="t"?(v.v?"True":"False"):v.o[0])}<br>${esc(v.w)}</div><p class="note">Using Doubt halves the XP for this question.</p><button class="pri" style="margin-top:12px" onclick="this.closest('.modal').remove()">Back to the game</button></div>`;document.body.append(m);return}m.innerHTML=`<div class="card"><h3>💡 ${esc(v[0])}</h3><div class="learn">${esc(v[1])}</div>${v[3]?`<pre>${esc(v[3].replace("___",v[4][v[5]]))}</pre>`:`<pre>${esc(v[4].join("\n"))}</pre>`}<p class="note">Full answer: ${esc(v[7])}</p><button class="pri" style="margin-top:12px" onclick="this.closest('.modal').remove()">Back to the game</button></div>`;document.body.append(m)};
 window.ans=j=>{const v=L[G.k].lv[G.i];if(j===v[5]){good()}else bad(j)};
 window.chk=()=>{const v=L[G.k].lv[G.i];G.pick.every((j,x)=>j===x)?good():bad(-1)};
-function good(){const g=G.hu?XP/2:XP;G.xp+=g;G.fb={ok:true,xp:g};G.lock=true;render()}
+function good(){const b=(L[G.k].big?ntier(G.i):tier(G.i))[1],g=G.hu?Math.ceil(b/2):b;G.xp+=g;G.fb={ok:true,xp:g};G.lock=true;render()}
 function bad(j){G.h--;G.w=j;G.fb={ok:false};if(j<0)G.pick=[];
- if(G.h<=0){const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card win"><h2 style="color:var(--bad)">Out of hearts 💔</h2><p>Every explorer falls sometimes. Review the Learn notes, then try the quest again.</p><div class="row" style="margin-top:14px"><button onclick="this.closest('.modal').remove();go('games')">Back to games</button><button class="pri" onclick="this.closest('.modal').remove();start('${G.k}')">Restart quest</button></div></div>`;document.body.append(m);render();return}
+ if(G.h<=0){const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card win"><h2 style="color:var(--bad)">Out of hearts 💔</h2><p>Every explorer falls sometimes. Review the Learn notes, then try the quest again.</p><div class="row" style="margin-top:14px"><button onclick="this.closest('.modal').remove();go('games')">Back to games</button>${L[G.k].big?`<button class="pri" onclick="this.closest('.modal').remove();cp()">Retry from checkpoint</button>`:`<button class="pri" onclick="this.closest('.modal').remove();start('${G.k}')">Restart quest</button>`}</div></div>`;document.body.append(m);render();return}
  render();setTimeout(()=>{if(G){G.w=null;G.fb=null;render()}},900)}
 window.nxt=()=>{const l=L[G.k];
  if(G.i+1<l.lv.length){G.i++;P.best[G.k]=Math.max(P.best[G.k]||0,G.i);lvl();render();return}
