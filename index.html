@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StarCode – learn programming by playing</title>
+<style>
+:root{--bg:#090d1f;--panel:#141a38;--panel2:#1d2550;--line:#2e3a78;--tx:#e6e9ff;--mu:#97a0d6;--star:#ffc857;--ok:#5eead4;--bad:#fb7185;--acc:#8b9bff}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Trebuchet MS','Segoe UI',system-ui,sans-serif;background:radial-gradient(ellipse at 80% -10%,#26307a55,transparent 55%),var(--bg);color:var(--tx);min-height:100vh;line-height:1.55}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none}
+#app{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:20px 16px 60px}
+h1,h2,h3{line-height:1.2}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.logo{font-weight:800;font-size:22px;letter-spacing:.3px}.logo span{color:var(--star)}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:5px 13px;font-size:13px}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--tx);border-radius:12px;padding:10px 16px;transition:.15s}
+button:hover{border-color:var(--acc);transform:translateY(-1px)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--star);outline-offset:2px}
+.pri{background:var(--star);color:#241a00;border-color:var(--star);font-weight:700}
+.pri:hover{border-color:#fff}
+.ghost{background:transparent}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.hero{padding:34px 24px;text-align:center}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;margin-bottom:10px}
+.hero p{color:var(--mu);max-width:560px;margin:0 auto 20px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+.menu button{text-align:left;padding:20px;border-radius:18px;background:var(--panel)}
+.menu b{display:block;font-size:18px;margin-bottom:4px}.menu small{color:var(--mu)}
+.lang{text-align:left;position:relative;overflow:hidden}
+.lang .em{font-size:30px}.lang b{display:block;margin-top:6px}
+.stars{letter-spacing:4px;color:var(--line);font-size:18px;margin-top:6px}.stars .on{color:var(--star);text-shadow:0 0 10px var(--star)}
+.done-tag{position:absolute;top:10px;right:12px;color:var(--ok);font-size:12px}
+.auth{max-width:420px;margin:8vh auto 0}
+.auth input,.srch{width:100%;background:#0d1230;border:1px solid var(--line);border-radius:12px;color:var(--tx);padding:12px;font:inherit;margin:6px 0 12px}
+.tabs{display:flex;gap:6px;margin-bottom:14px}.tabs button{flex:1}.tabs .sel{background:var(--acc);color:#0b1030;border-color:var(--acc);font-weight:700}
+.err{color:var(--bad);font-size:13px;min-height:18px}.note{color:var(--mu);font-size:12px;margin-top:10px}
+.sec{margin:18px 0 8px;color:var(--mu);font-size:14px}
+code,pre{font-family:Consolas,'Courier New',monospace}
+pre{background:#070a19;border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.7;margin:10px 0}
+.blank{background:var(--star);color:#241a00;border-radius:6px;padding:0 10px}
+.learn{border-left:3px solid var(--acc);background:#10163a;padding:12px 14px;border-radius:0 12px 12px 0;color:var(--mu);margin:10px 0}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.opts button{font-family:Consolas,'Courier New',monospace;font-size:14px}
+.opts .right{background:#0f3d38;border-color:var(--ok)}.opts .wrong{background:#431726;border-color:var(--bad);animation:sh .3s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.tiles{display:flex;flex-direction:column;gap:8px;margin:8px 0}.tiles button{text-align:left;font-family:Consolas,'Courier New',monospace;font-size:13px;white-space:pre}
+.ans{min-height:56px;border:1px dashed var(--line);border-radius:12px;padding:8px;margin:8px 0}
+.bar{height:8px;background:#0d1230;border-radius:9px;overflow:hidden;margin:6px 0 14px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--star));transition:width .4s}
+.fb{padding:12px 14px;border-radius:12px;margin:10px 0}.fb.ok{background:#0f3d38;border:1px solid var(--ok)}.fb.no{background:#431726;border:1px solid var(--bad)}
+.hint{background:#2a2410;border:1px solid var(--star);color:#ffe9a8;padding:10px 14px;border-radius:12px;margin:10px 0}
+.modal{position:fixed;inset:0;background:#030510dd;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .card{max-width:560px;max-height:90vh;overflow:auto;width:100%}
+.modal ol,.card ul{padding-left:20px;color:var(--mu)}.modal li,.card li{margin:5px 0}
+.win{text-align:center}.win h2{font-size:30px;color:var(--star)}
+#conf{position:fixed;inset:0;z-index:30;pointer-events:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<canvas id="sky"></canvas><canvas id="conf"></canvas>
+<div id="app"></div>
+
+<script>
+(function(){
+/* ---------- LESSON DATA: [title, learn, question, code, options, answerIndex, hint, why]  (code=null → order the lines: options = correct order) ---------- */
+const L={
+py:{n:"Python",e:"🐍",lv:[
+["Say hello","Python shows text on screen with a built-in function. Functions are actions you call with parentheses.","Which word prints text?",'___("Hello, World!")',["print","echo","console.log","say"],0,"It's the simplest word for 'show this'.","print() is Python's built-in output function. echo is shell/PHP, console.log is JavaScript."],
+["Lists","A list holds many values in order, inside [ ]. Lists have methods — actions attached to them with a dot.","Add 'mango' to the end of the list.",'fruits = ["apple", "banana"]\nfruits.___("mango")',["append","add","push","insert_end"],0,"Think 'attach to the end'.","list.append(x) adds one item at the end. push is JavaScript; add belongs to sets."],
+["Loops","A for loop repeats code. range(n) produces the numbers 0 up to n-1.","Make the loop print 0, 1, 2.",'for i in ___(3):\n    print(i)',["range","loop","repeat","count"],0,"It makes a range of numbers.","range(3) gives 0,1,2 — it stops before 3."],
+["Functions","def creates a reusable function. return sends a value back. Indentation shows what belongs inside.","Arrange the lines to define and call greet.",null,['def greet(name):','    return "Hi " + name','print(greet("Sam"))'],-1,"Define first, use after.","You must define a function before calling it; the return line is indented because it's inside the function."]]},
+js:{n:"JavaScript",e:"🟨",lv:[
+["Variables","let creates a variable you can change later. const creates one you can't reassign.","Create a changeable variable.",'___ age = 20;',["let","int","dim","define"],0,"Modern JS uses it for changeable values.","let declares a block-scoped variable. int/dim/define aren't JavaScript keywords."],
+["Console","The console is where developers see messages while testing.","Print Hi to the console.",'console.___("Hi");',["log","print","write","echo"],0,"Think 'keep a log'.","console.log() writes to the browser console."],
+["Arrow functions","An arrow function is a short function: (inputs) => result.","Complete the arrow function.",'const add = (a, b) ___ a + b;',["=>","->","=","::"],0,"It looks like an arrow made of = and >.","=> is the arrow-function symbol. -> is Java/C++/Python typing syntax."],
+["Array map","map() builds a new array by applying a function to each item.","Arrange the lines to double every number.",null,['const nums = [1, 2, 3];','const doubled = nums.map(n => n * 2);','console.log(doubled);'],-1,"Create data → transform → show.","The array must exist before map runs; log comes last to display the result."]]},
+re:{n:"React JS",e:"⚛️",lv:[
+["Components","A React component is a function that returns JSX — HTML-like syntax.","What should the component return?",'function Hello() {\n  return ___;\n}',["<h1>Hello</h1>","print(\"Hello\")","echo Hello","<<h1>>"],0,"Components return markup.","JSX looks like HTML and is returned from a component function."],
+["State","State is memory for a component. When it changes, React redraws the screen. useState returns the value and a setter.","Create a state starting at 0.",'const [count, setCount] = ___(0);',["useState","useVar","useCount","setState"],0,"Hooks start with 'use'.","useState(0) gives [currentValue, functionToChangeIt]."],
+["Events","Events like clicks are handled with camelCase props.","Run code when the button is clicked.",'<button ___={() => setCount(count + 1)}>+</button>',["onClick","onPress","click","on-click"],0,"camelCase: on + event name.","React uses onClick (camelCase) and passes a function."],
+["Counter","Put it together: state + JSX + event.","Arrange a complete Counter component.",null,['function Counter() {','  const [n, setN] = useState(0);','  return <button onClick={() => setN(n + 1)}>{n}</button>;','}'],-1,"State first, then what it returns.","Hooks go at the top of the component, before the return."]]},
+html:{n:"HTML",e:"🌐",lv:[
+["Headings","HTML uses tags like <h1> to give structure. h1 is the most important heading.","Pick the biggest heading tag.",'<___>My Title</___>',["h1","p","h6","small"],0,"1 is the top rank.","h1 is the main heading; h6 is the smallest."],
+["Links","The <a> tag makes links. Its href attribute holds the destination.","Fill in the link attribute.",'<a ___="https://example.com">Visit</a>',["href","src","link","url"],0,"Hypertext REFerence.","href = where the link goes. src is for images/scripts."],
+["Images","<img> shows a picture; alt describes it for screen readers.","Which attribute sets the image file?",'<img ___="cat.png" alt="A cat">',["src","href","file","path"],0,"Think 'source'.","src gives the image source."],
+["Lists","A <ul> holds <li> items.","Arrange the list.",null,['<ul>','  <li>HTML</li>','  <li>CSS</li>','</ul>'],-1,"Open the list, add items, close it.","Tags open and close in nested order."]]},
+css:{n:"CSS",e:"🎨",lv:[
+["Colors","CSS styles HTML with property: value; pairs inside { }.","Set the text colour.",'p { ___: red; }',["color","text","font-color","paint"],0,"British and American both spell it simply.","color sets the text colour."],
+["Flexbox","Flexbox lines children up and spaces them neatly.","Turn on flexbox.",'.box { display: ___; }',["flex","row","align","flow"],0,"Short for 'flexible'.","display:flex activates flexbox on the parent."],
+["Hover","Pseudo-classes style special states.","Style the button when the mouse is over it.",'.btn:___ { background: gold; }',["hover","over","mouse","point"],0,"Mouse hovering.",":hover applies while the pointer is over the element."],
+["A card","Padding is space inside; border-radius rounds corners.","Arrange the rule.",null,['.card {','  padding: 16px;','  border-radius: 12px;','}'],-1,"Selector, declarations, closing brace.","Every rule: selector, {, declarations ending in ;, }."]]},
+sql:{n:"SQL",e:"🗄️",lv:[
+["SELECT","SQL talks to databases. SELECT reads data.","Read every column from users.",'___ * FROM users;',["SELECT","GET","FETCH","PICK"],0,"The reading command.","SELECT chooses data; * means all columns."],
+["WHERE","WHERE filters rows.","Only adults (age over 18).",'SELECT name FROM users ___ age > 18;',["WHERE","IF","WHEN","LIMIT"],0,"It filters rows by a condition.","WHERE keeps rows where the condition is true."],
+["INSERT","INSERT adds a new row.","Complete the insert.","INSERT INTO users (name) ___ ('Ali');",["VALUES","ADD","SET","PUT"],0,"What values go in?","INSERT INTO table (cols) VALUES (...)."],
+["Full query","Clauses follow a fixed order.","Arrange the query.",null,['SELECT name','FROM users','WHERE age > 18','ORDER BY name;'],-1,"Select, from, filter, sort.","Order: SELECT → FROM → WHERE → ORDER BY."]]},
+java:{n:"Java",e:"☕",lv:[
+["Output","Java prints with System.out.","Print a line.",'System.out.___("Hi");',["println","log","echo","write"],0,"Print + line.","println prints and moves to the next line."],
+["Types","Java needs the type declared first.","Declare a whole number.",'___ x = 5;',["int","integer","number","dec"],0,"Short for integer.","int is the whole-number primitive."],
+["Loops","A for loop has start; condition; step.","Loop while i is less than 3.",'for (int i = 0; i ___ 3; i++)',["<","=>","->","="],0,"A comparison symbol.","i < 3 is true for 0,1,2."],
+["Main","Every program starts in main.","Arrange a Hello program.",null,['public class Main {','  public static void main(String[] args) {','    System.out.println("Hi");','  }','}'],-1,"Class outside, main inside, print innermost.","Code lives inside main, which lives inside the class."]]},
+cpp:{n:"C++",e:"⚙️",lv:[
+["Include","C++ imports tools using #include.","Which header gives you cout?",'#include <___>',["iostream","console","print","std"],0,"Input/output stream.","iostream provides cout and cin."],
+["cout","cout sends output; << pushes data into it.","Print Hello.",'std::___ << "Hello";',["cout","print","out","echo"],0,"C-out.","std::cout is standard output."],
+["Types","C++ is typed.","Declare an integer.",'___ x = 10;',["int","let","num","dim"],0,"Same as Java.","int stores whole numbers."],
+["main","Arrange a tiny program.","Put the lines in order.",null,['#include <iostream>','int main() {','  std::cout << "Hi";','  return 0;','}'],-1,"Include first, return last.","Includes come first; return 0 ends main."]]}
+};
+const XP=20,HINT=5,HEARTS=3;
+
+/* ---------- STATE ---------- */
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+let user=null,P=null,G=null,view="auth",mode="in",err="";
+const blank=()=>({xp:0,done:{},best:{}});
+const lk=()=>{try{return JSON.parse(localStorage.getItem("sc_users")||"{}")}catch(e){return{}}};
+const hash=t=>{let h=5381;for(const c of t)h=(h*33^c.charCodeAt(0))>>>0;return h.toString(36)};
+function save(){try{localStorage.setItem("sc_p_"+user.uid,JSON.stringify(P))}catch(e){}}
+function load(){let p=null;try{p=JSON.parse(localStorage.getItem("sc_p_"+user.uid)||"null")}catch(e){}
+  p=p||blank();p.done=p.done||{};p.best=p.best||{};P=p}
+function auth(){
+  const name=$("#nm")?$("#nm").value.trim():"",em=$("#em").value.trim().toLowerCase(),pw=$("#pw").value;err="";
+  if(!em||!pw||(mode==="up"&&!name)){err="Please fill in every field.";return render()}
+  if(!/^\S+@\S+\.\S+$/.test(em)){err="Enter a valid email address.";return render()}
+  if(pw.length<6){err="Use a password with at least 6 characters.";return render()}
+  const u=lk();
+  if(mode==="up"){if(u[em]){err="That email already has an account. Sign in instead.";return render()}
+    u[em]={name,pw:hash(pw),uid:"u_"+hash(em)};try{localStorage.setItem("sc_users",JSON.stringify(u))}catch(e){}}
+  else if(!u[em]||u[em].pw!==hash(pw)){err="Wrong email or password.";return render()}
+  user={uid:u[em].uid,name:u[em].name,email:em};
+  try{localStorage.setItem("sc_session",em)}catch(e){}
+  load();view="home";render();
+}
+function out(){try{localStorage.removeItem("sc_session")}catch(e){}user=P=G=null;view="auth";mode="in";render()}
+
+/* ---------- RENDER ---------- */
+const stat=()=>`<div class="stats"><span class="chip">⭐ ${P.xp} XP</span><span class="chip">🏅 ${Object.keys(P.done).length}/${Object.keys(L).length} complete</span></div>`;
+const hdr=(b)=>`<div class="top"><div class="logo">Star<span>Code</span> ✦</div>${user?stat():""}<div class="row">${b||""}${user?`<button class="ghost" onclick="go('home')">Home</button><button class="ghost" onclick="out()">Sign out</button>`:""}</div></div>`;
+window.go=v=>{view=v;G=null;render();scrollTo(0,0)};window.out=out;window.auth=auth;
+window.setMode=m=>{mode=m;err="";render()};
+function render(){const A=$("#app");
+if(view==="auth"){A.innerHTML=`${hdr()}<div class="card auth"><h2>${mode==="in"?"Welcome back":"Create your account"}</h2><p class="note" style="margin:4px 0 14px">Learn to code in small night-sky quests. Your progress is saved to your account.</p>
+<div class="tabs"><button class="${mode==="in"?"sel":""}" onclick="setMode('in')">Sign in</button><button class="${mode==="up"?"sel":""}" onclick="setMode('up')">Sign up</button></div>
+${mode==="up"?'<label>Your name<input id="nm" autocomplete="name"></label>':""}
+<label>Email<input id="em" type="email" autocomplete="email"></label><label>Password<input id="pw" type="password" autocomplete="${mode==="in"?"current-password":"new-password"}" onkeydown="event.key==='Enter'&&auth()"></label>
+<div class="err">${err}</div><button class="pri" style="width:100%" onclick="auth()">${mode==="in"?"Sign in":"Sign up"}</button>
+<p class="note">Works offline. Your account and progress are saved in this browser on this device.</p></div>`;return}
+if(view==="home"){A.innerHTML=`${hdr()}<div class="card hero"><h1>Hi ${esc(P.name||user.name)}, ready to level up?</h1><p>Each game is a short quest. You learn one idea, solve a puzzle, earn XP and light up a star. Finish every star to complete the language.</p><button class="pri" onclick="go('games')">Open Games</button></div>
+<div class="menu"><button onclick="go('games')"><b>🎮 Games</b><small>${Object.keys(L).length} languages to play</small></button><button onclick="go('doubt')"><b>💡 Doubt Clearer</b><small>Search any concept and see an explained example</small></button><button onclick="go('done')"><b>🏆 Completed Sessions</b><small>${Object.keys(P.done).length} finished</small></button><button onclick="help()"><b>❓ How it works</b><small>XP, hearts, hints and refresh</small></button></div>`;return}
+if(view==="games"){A.innerHTML=`${hdr()}<h2>Choose a game</h2><p class="sec">Pick a language. You'll get a full briefing before you start.</p><div class="grid">${Object.entries(L).map(([k,l])=>`<button class="card lang" onclick="brief('${k}')">${P.done[k]?'<span class="done-tag">✔ complete</span>':""}<span class="em">${l.e}</span><b>${l.n}</b><span class="note">${l.lv.length} levels</span><div class="stars">${l.lv.map((_,i)=>`<span class="${P.done[k]||(P.best[k]||0)>i?"on":""}">★</span>`).join("")}</div></button>`).join("")}</div>`;return}
+if(view==="brief"){const l=L[G.k];A.innerHTML=`${hdr()}<div class="card"><h2>${l.e} ${l.n} quest</h2>
+<p class="sec">Before you start</p><p>This is a learning game, not just a quiz. Each level teaches one real ${l.n} idea in a short note, then asks you to use it. Every answer comes with an explanation, so even mistakes teach you something.</p>
+<p class="sec">How to play</p><ul><li>Read the <b>Learn</b> note, then look at the code.</li><li>Pick the option that fills the <span class="blank">&nbsp;&nbsp;</span> gap — or tap lines to put them in the right order and press <b>Check</b>.</li><li>You have ${HEARTS} ❤️ hearts. A wrong answer costs one; at zero you restart the quest.</li></ul>
+<p class="sec">Tools you can use</p><ul><li>💡 <b>Hint</b> — a nudge, costs ${HINT} XP.</li><li>🔄 <b>Refresh</b> — resets this level and reshuffles it, free.</li><li>🙋 <b>Doubt</b> — opens the full concept explanation anytime.</li></ul>
+<p class="sec">What you gain</p><ul><li>+${XP} XP for each correct answer (+${XP/2} if you used a hint)</li><li>A lit star per level, and a spot in Completed Sessions with a celebration.</li></ul>
+<div class="row" style="margin-top:18px"><button class="ghost" onclick="go('games')">Back</button><button class="pri" onclick="start('${G.k}')">Start the quest</button></div></div>`;return}
+if(view==="play"){play();return}
+if(view==="doubt"){A.innerHTML=`${hdr()}<h2>Doubt Clearer</h2><p class="sec">Type a word (like loop, state, WHERE) or pick a language.</p><input class="srch" id="q" placeholder="Search a concept…" oninput="dq()"><div id="dr"></div>`;dq();return}
+if(view==="done"){const d=Object.entries(P.done);A.innerHTML=`${hdr()}<h2>Completed Sessions</h2>${d.length?`<div class="grid" style="margin-top:12px">${d.map(([k,v])=>`<div class="card"><span style="font-size:30px">${L[k].e}</span><h3>${L[k].n}</h3><p class="note">Finished ${new Date(v.date).toLocaleDateString()}<br>${v.xp} XP earned · ${"❤️".repeat(v.hearts)||"💔"} left</p><div class="stars"><span class="on">★★★★</span></div></div>`).join("")}</div>`:`<div class="card"><p>Nothing here yet. Finish all levels of a game and it will appear here.</p><button class="pri" style="margin-top:12px" onclick="go('games')">Pick a game</button></div>`}`}
+}
+window.dq=()=>{const q=($("#q")?.value||"").toLowerCase();const r=[];
+for(const[k,l]of Object.entries(L))for(const v of l.lv){if(!q||(l.n+v[0]+v[1]+v[3]).toLowerCase().includes(q))r.push([l,v])}
+$("#dr").innerHTML=r.length?r.map(([l,v])=>`<div class="card" style="margin-bottom:12px"><b>${l.e} ${l.n} · ${esc(v[0])}</b><div class="learn">${esc(v[1])}</div>${v[3]?`<pre>${esc(v[3].replace("___",v[4][v[5]]))}</pre>`:`<pre>${esc(v[4].join("\n"))}</pre>`}<p class="note">${esc(v[7])}</p></div>`).join(""):`<div class="card">No match. Try a shorter word like "list" or "loop".</div>`};
+window.help=()=>{const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card"><h2>How StarCode works</h2><ol><li><b>Games</b> → choose a language → read the briefing.</li><li>Each level: learn a note, then solve the puzzle.</li><li><b>Hint</b> costs ${HINT} XP. <b>Refresh</b> reshuffles the level. <b>Doubt</b> shows the full explanation.</li><li>Wrong answers cost a ❤️. Zero hearts restarts the quest.</li><li>Finish every level to celebrate and unlock the language in <b>Completed Sessions</b>.</li></ol><button class="pri" style="margin-top:14px" onclick="this.closest('.modal').remove()">Got it</button></div>`;document.body.append(m)};
+
+/* ---------- GAME ---------- */
+window.brief=k=>{G={k};view="brief";render()};
+window.start=k=>{G={k,i:0,h:HEARTS,xp:0};view="play";lvl();render()};
+function lvl(){const v=L[G.k].lv[G.i];G.o=v[3]?shuf(v[4].map((t,j)=>[t,j])):shuf(v[4].map((t,j)=>[t,j]));G.pick=[];G.fb=null;G.hint=false;G.hu=false;G.lock=false}
+function play(){const l=L[G.k],v=l.lv[G.i],ord=!v[3];
+$("#app").innerHTML=`${hdr()}<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3>${l.e} ${l.n} · Level ${G.i+1}/${l.lv.length}: ${esc(v[0])}</h3><span class="chip">${"❤️".repeat(G.h)||"💔"}</span></div>
+<div class="bar"><i style="width:${G.i/l.lv.length*100}%"></i></div>
+<div class="learn"><b>Learn:</b> ${esc(v[1])}</div><p><b>Task:</b> ${esc(v[2])}</p>
+${ord?`<div class="ans">${G.pick.map(j=>`<button class="tl" onclick="unp(${j})" style="font-family:Consolas,'Courier New',monospace;font-size:13px;white-space:pre;margin:2px">${esc(v[4][j])}</button>`).join("")||'<span class="note">Tap lines below in order…</span>'}</div><div class="tiles">${G.o.filter(([t,j])=>!G.pick.includes(j)).map(([t,j])=>`<button onclick="pk(${j})">${esc(t)}</button>`).join("")}</div>`
+:`<pre>${esc(v[3]).replace("___",'<span class="blank">&nbsp;?&nbsp;</span>')}</pre><div class="opts">${G.o.map(([t,j])=>`<button class="${G.fb&&j===v[5]?"right":G.w===j?"wrong":""}" ${G.lock?"disabled":""} onclick="ans(${j})">${esc(t)}</button>`).join("")}</div>`}
+${G.hint?`<div class="hint">💡 ${esc(v[6])}</div>`:""}${G.fb?`<div class="fb ${G.fb.ok?"ok":"no"}"><b>${G.fb.ok?"Correct! +"+G.fb.xp+" XP":"Not quite."}</b><br>${esc(v[7])}</div>`:""}
+<div class="row" style="justify-content:flex-start;margin-top:10px">${ord&&!G.lock?`<button class="pri" onclick="chk()" ${G.pick.length!==v[4].length?"disabled":""}>Check</button>`:""}
+<button onclick="hint()" ${G.lock?"disabled":""}>💡 Hint (−${HINT} XP)</button><button onclick="ref()">🔄 Refresh</button><button onclick="doubt()">🙋 Doubt</button>
+${G.lock&&G.fb?.ok?`<button class="pri" onclick="nxt()">${G.i+1===l.lv.length?"Finish quest 🎉":"Next level →"}</button>`:""}${G.fb&&!G.fb.ok&&G.h>0&&!ord?`<span class="note">Try again…</span>`:""}</div>
+<p class="note">Quest XP: ${G.xp}</p></div>`}
+window.pk=j=>{G.pick.push(j);G.fb=null;render()};window.unp=j=>{G.pick=G.pick.filter(x=>x!==j);render()};
+window.ref=()=>{G.h=G.h;lvl();render()};
+window.hint=()=>{if(!G.hint){G.hint=true;G.hu=true;G.xp=Math.max(0,G.xp-HINT)}render()};
+window.doubt=()=>{const v=L[G.k].lv[G.i],m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card"><h3>💡 ${esc(v[0])}</h3><div class="learn">${esc(v[1])}</div>${v[3]?`<pre>${esc(v[3].replace("___",v[4][v[5]]))}</pre>`:`<pre>${esc(v[4].join("\n"))}</pre>`}<p class="note">Full answer: ${esc(v[7])}</p><button class="pri" style="margin-top:12px" onclick="this.closest('.modal').remove()">Back to the game</button></div>`;document.body.append(m)};
+window.ans=j=>{const v=L[G.k].lv[G.i];if(j===v[5]){good()}else bad(j)};
+window.chk=()=>{const v=L[G.k].lv[G.i];G.pick.every((j,x)=>j===x)?good():bad(-1)};
+function good(){const g=G.hu?XP/2:XP;G.xp+=g;G.fb={ok:true,xp:g};G.lock=true;render()}
+function bad(j){G.h--;G.w=j;G.fb={ok:false};if(j<0)G.pick=[];
+ if(G.h<=0){const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card win"><h2 style="color:var(--bad)">Out of hearts 💔</h2><p>Every explorer falls sometimes. Review the Learn notes, then try the quest again.</p><div class="row" style="margin-top:14px"><button onclick="this.closest('.modal').remove();go('games')">Back to games</button><button class="pri" onclick="this.closest('.modal').remove();start('${G.k}')">Restart quest</button></div></div>`;document.body.append(m);render();return}
+ render();setTimeout(()=>{if(G){G.w=null;G.fb=null;render()}},900)}
+window.nxt=()=>{const l=L[G.k];
+ if(G.i+1<l.lv.length){G.i++;P.best[G.k]=Math.max(P.best[G.k]||0,G.i);lvl();render();return}
+ P.xp+=G.xp;P.done[G.k]={date:Date.now(),xp:G.xp,hearts:G.h};save();
+ const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="card win"><div style="font-size:60px">🏆</div><h2>You completed ${l.n}!</h2><p>${G.xp} XP earned · ${G.h} ❤️ left</p><p class="note" style="margin:8px 0 16px">Added to Completed Sessions on your home page.</p><div class="row"><button onclick="this.closest('.modal').remove();go('done')">See Completed Sessions</button><button class="pri" onclick="this.closest('.modal').remove();go('games')">Play another</button></div></div>`;document.body.append(m);confetti()};
+
+/* ---------- STARS + CONFETTI ---------- */
+const sk=$("#sky"),sx=sk.getContext("2d");let S=[];
+function rs(){sk.width=innerWidth;sk.height=innerHeight;S=Array.from({length:110},()=>({x:Math.random()*sk.width,y:Math.random()*sk.height,r:Math.random()*1.4+.3,p:Math.random()*6}))}
+rs();addEventListener("resize",rs);
+(function tw(t){sx.clearRect(0,0,sk.width,sk.height);for(const s of S){sx.globalAlpha=.4+.5*Math.sin(t/900+s.p);sx.fillStyle="#cfd6ff";sx.beginPath();sx.arc(s.x,s.y,s.r,0,7);sx.fill()}requestAnimationFrame(tw)})(0);
+function confetti(){const c=$("#conf"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+ const cols=["#ffc857","#5eead4","#8b9bff","#fb7185","#fff"];
+ const P2=Array.from({length:160},()=>({x:innerWidth/2,y:innerHeight/2,vx:(Math.random()-.5)*16,vy:Math.random()*-14-2,c:cols[Math.random()*5|0],s:Math.random()*7+3,a:1}));
+ (function f(){x.clearRect(0,0,c.width,c.height);let alive=0;for(const p of P2){p.x+=p.vx;p.y+=p.vy;p.vy+=.32;p.a-=.006;if(p.a>0){alive++;x.globalAlpha=p.a;x.fillStyle=p.c;x.fillRect(p.x,p.y,p.s,p.s*.6)}}alive?requestAnimationFrame(f):x.clearRect(0,0,c.width,c.height)})()}
+
+/* ---------- BOOT ---------- */
+try{const em=localStorage.getItem("sc_session"),u=lk();
+  if(em&&u[em]){user={uid:u[em].uid,name:u[em].name,email:em};load();view="home"}}catch(e){}
+render();
+})();
+</script></body></html>
